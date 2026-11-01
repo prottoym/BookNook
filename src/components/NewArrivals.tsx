@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getDb } from "@/lib/mongodb";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 type Book = {
   _id: string;
@@ -11,16 +12,15 @@ type Book = {
 
 async function getLatestBooks(): Promise<Book[]> {
   try {
-    const db = await getDb();
-    const docs = await db
-      .collection("books")
-      .find({})
-      .sort({ createdAt: -1 }) // newest first
-      .limit(6) // only 6 books
-      .toArray();
+    // The Express server runs sort({ createdAt: -1 }).limit(6) on MongoDB
+    const res = await fetch(`${API_URL}/books?sort=newest&limit=6`, {
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+    const docs: Partial<Book>[] = await res.json();
 
     return docs.map((d) => ({
-      _id: d._id.toString(),
+      _id: String(d._id),
       title: d.title ?? "Untitled",
       author: d.author ?? "Unknown author",
       category: d.category ?? "General",
@@ -65,7 +65,7 @@ export default async function NewArrivals() {
                       <img
                         src={book.image}
                         alt={book.title}
-                        className="h-full w-auto max-w-full rounded-sm object-cover shadow-[6px_8px_16px_rgba(59,58,47,0.35)] transition duration-300 group-hover:-translate-y-2 group-hover:rotate-[-1.5deg]"
+                        className="h-full w-48 max-w-full rounded-sm object-cover shadow-[6px_8px_16px_rgba(59,58,47,0.35)] transition duration-300 group-hover:-translate-y-2 group-hover:rotate-[-1.5deg]"
                       />
                     ) : (
                       <div className="flex h-full w-48 items-center justify-center rounded-sm bg-[#3b3a2f] p-4 text-center font-serif text-[#e8e4d0] shadow-lg">
