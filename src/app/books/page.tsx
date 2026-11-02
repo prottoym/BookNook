@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 import BookCard from "@/components/BookCard";
 import Spinner from "@/components/Spinner";
 import { CATEGORIES, type Book } from "@/lib/books";
@@ -23,6 +24,7 @@ async function getBooks(search: string, category: string) {
     const books: Book[] = await res.json();
     return { books, failed: false };
   } catch (error) {
+    if ((error as { digest?: string })?.digest === "HANGING_PROMISE_REJECTION") throw error; // not a real failure, let Next.js handle it
     console.error("Failed to load books:", error);
     return { books: [] as Book[], failed: true };
   }
@@ -88,8 +90,10 @@ async function BooksContent({ searchParams }: { searchParams: SearchParams }) {
           </p>
           {/* 3 cards per row on desktop */}
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {books.map((book) => (
-              <BookCard key={book._id} book={book} />
+            {books.map((book, i) => (
+              <Reveal key={book._id} className="h-full" delay={(i % 3) * 0.08}>
+                <BookCard book={book} />
+              </Reveal>
             ))}
           </div>
         </>
@@ -103,13 +107,13 @@ export default function BooksPage({ searchParams }: { searchParams: SearchParams
     <section className="bg-[#f6f3e6] py-16">
       <div className="mx-auto max-w-6xl px-4">
         {/* Heading (same style as the other sections) */}
-        <div className="mb-10 text-center">
+        <Reveal className="mb-10 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2f7fc1]">
             The whole library
           </span>
           <h1 className="mt-2 font-serif text-3xl font-bold text-[#3b3a2f] sm:text-4xl">All Books</h1>
           <div className="mx-auto mt-4 h-1 w-16 rounded bg-[#2f7fc1]" />
-        </div>
+        </Reveal>
 
         <Suspense fallback={<Spinner label="Loading books..." />}>
           <BooksContent searchParams={searchParams} />
