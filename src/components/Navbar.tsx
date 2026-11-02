@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -37,7 +38,7 @@ export default function Navbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
-  const dropRef = useRef(null);
+  const dropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -45,8 +46,8 @@ export default function Navbar() {
   }, [pathname]);
 
   useEffect(() => {
-    const handler = (e) => {
-      if (dropRef.current && !dropRef.current.contains(e.target)) setDropOpen(false);
+    const handler = (e: MouseEvent) => {
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setDropOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -61,7 +62,7 @@ export default function Navbar() {
     router.refresh();
   };
 
-  const linkClass = (href) =>
+  const linkClass = (href: string) =>
     `rounded-md px-3 py-2 text-[15px] transition-colors hover:bg-[#d3cfb8] ${
       pathname === href ? "bg-[#d3cfb8] font-semibold text-[#3b3a2f]" : "text-[#4a493c]"
     }`;

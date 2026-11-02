@@ -116,10 +116,10 @@ export default function Footer() {
             <li>
               ✉️{" "}
               <a
-                href="mailto:prottoymodakprottoy@booknook.com"
+                href="mailto:prottoymodakprottoy@gmail.com"
                 className="hover:text-white"
               >
-                prottoymodakprottoy@booknook.com
+                prottoymodakprottoy@gmail.com
               </a>
             </li>
           </ul>
