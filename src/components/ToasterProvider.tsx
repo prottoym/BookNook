@@ -8,7 +8,7 @@ export default function ToasterProvider() {
       position="top-center"
       toastOptions={{
         duration: 3500,
-        style: { background: "#3b3a2f", color: "#f6f3e6" },
+        style: { background: "#3b3a2f", color: "#f6f3e6", border: "1px solid #55543f" },
         success: { iconTheme: { primary: "#6fb1e8", secondary: "#3b3a2f" } },
       }}
     />

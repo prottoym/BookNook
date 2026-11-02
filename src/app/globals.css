@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f3e6;
+  --foreground: #3b3a2f;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ---------- Dark theme ----------
+   The pages use fixed beige colours, so in dark mode we swap them here. */
+html.dark {
+  color-scheme: dark;
+  --background: #17160f;
+  --foreground: #f0ecd8;
+}
+.dark [class~="bg-white"] { background-color: #211f17; }
+.dark [class~="bg-white/90"] { background-color: rgb(33 31 23 / 0.9); }
+.dark [class~="bg-[#f6f3e6]"] { background-color: #17160f; }
+.dark [class~="bg-[#faf8f0]"] { background-color: #1d1c14; }
+.dark [class~="bg-[#e0dcc8]"] { background-color: #2b291e; }
+.dark [class~="bg-[#e3dfca]"] { background-color: #38362a; }
+.dark [class~="bg-[#d3cfb8]"] { background-color: #3a382b; }
+.dark [class~="bg-[#cfcab0]"] { background-color: #4a4836; }
+.dark [class~="text-[#3b3a2f]"] { color: #f0ecd8; }
+.dark [class~="text-[#4a493c]"] { color: #d6d2bc; }
+.dark [class~="text-[#7a786a]"] { color: #a9a58a; }
+.dark [class~="text-[#9a977f]"] { color: #8d8a74; }
+.dark [class~="text-[#6b6a58]"] { color: #a9a58a; }
+.dark [class~="text-[#0b6bcb]"] { color: #6fb1e8; }
+.dark [class~="text-[#2f7fc1]"] { color: #6fb1e8; }
+.dark [class~="border-[#cfcab0]"] { border-color: #4a4836; }
+.dark [class~="border-[#e3dfca]"] { border-color: #38362a; }
+.dark [class~="border-[#e0dcc8]"] { border-color: #38362a; }
+.dark [class~="border-[#eee9d6]"] { border-color: #2b291e; }
+.dark [class~="hover:bg-[#f6f3e6]"]:hover { background-color: #2a281d; }
+.dark [class~="hover:bg-[#f3f0e1]"]:hover { background-color: #2a281d; }
+.dark [class~="hover:bg-[#d3cfb8]"]:hover { background-color: #3a382b; }
+.dark [class~="divide-[#eee9d6]"] > :not(:last-child) { border-color: #2b291e; }
+.dark [class~="hover:text-white"]:hover { color: #fff; }
+.dark [class~="hover:text-[#0b6bcb]"]:hover { color: #6fb1e8; }
