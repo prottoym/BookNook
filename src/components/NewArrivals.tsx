@@ -29,6 +29,7 @@ async function getLatestBooks(): Promise<Book[]> {
       image: d.image ?? "",
     }));
   } catch (error) {
+    if ((error as { digest?: string })?.digest === "HANGING_PROMISE_REJECTION") throw error; // not a real failure, let Next.js handle it
     console.error("Failed to load new arrivals:", error);
     return [];
   }
