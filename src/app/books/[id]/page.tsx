@@ -38,6 +38,7 @@ async function BookDetails({ params }: Props) {
   try {
     book = await getBook(id);
   } catch (error) {
+    if ((error as { digest?: string })?.digest === "HANGING_PROMISE_REJECTION") throw error; // not a real failure, let Next.js handle it
     console.error("Failed to load the book:", error);
     return (
       <section className="bg-[#f6f3e6] px-4 py-24 text-center">
