@@ -33,7 +33,9 @@ export default function LoginForm() {
     const { error } = await authClient.signIn.email({ email, password });
 
     if (error) {
-      const message = error.message || "Login failed. Please check your email and password.";
+      console.error("Login failed:", error);
+      const message =
+        error.message || `Login failed (server error ${error.status}). Please try again.`;
       setFormError(message);
       toast.error(message);
       setLoading(false);

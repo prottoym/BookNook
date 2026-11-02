@@ -34,7 +34,8 @@ export default function BorrowButton({
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [returnDate, setReturnDate] = useState(() => toInputDate(inDays(7)));
+  const [returnDate, setReturnDate] = useState(toInputDate(inDays(7)));
+  // const [returnDate, setReturnDate] = useState(() => toInputDate(inDays(7)));
 
   // close the modal with the Escape key
   useEffect(() => {

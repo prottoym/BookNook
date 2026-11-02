@@ -52,12 +52,18 @@ export default function RegisterForm() {
     const { error } = await authClient.signUp.email({ name, email, password, image });
 
     if (error) {
-      const message = error.message || "Registration failed. Please try again.";
+      console.error("Sign up failed:", error);
+      const message =
+        error.message || `Registration failed (server error ${error.status}). Please try again.`;
       setFormError(message);
       toast.error(message);
       setLoading(false);
       return;
     }
+
+    // BetterAuth signs a new user in by itself. We want them to log in on the Login page,
+    // so sign out first.
+    await authClient.signOut();
 
     toast.success("Account created! Please log in.");
     router.push(

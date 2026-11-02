@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import BookCard from "@/components/BookCard";
+import Spinner from "@/components/Spinner";
 import { CATEGORIES, type Book } from "@/lib/books";
 
 export const metadata: Metadata = { title: "All Books" };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+type SearchParams = Promise<{ search?: string; category?: string }>;
 
 async function getBooks(search: string, category: string) {
   try {
@@ -24,15 +28,77 @@ async function getBooks(search: string, category: string) {
   }
 }
 
-export default async function BooksPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ search?: string; category?: string }>;
-}) {
+// Search box + the books. This part reads the URL and the server, so it sits
+// inside <Suspense> and a spinner shows while it loads.
+async function BooksContent({ searchParams }: { searchParams: SearchParams }) {
   const { search = "", category = "" } = await searchParams;
   const { books, failed } = await getBooks(search.trim(), category);
   const filtering = Boolean(search.trim() || category);
 
+  return (
+    <>
+      {/* Search + category filter. A plain GET form, so it works without JavaScript */}
+      <form action="/books" method="get" className="mx-auto mb-10 flex max-w-3xl flex-col gap-3 sm:flex-row">
+        <input
+          type="search"
+          name="search"
+          defaultValue={search}
+          placeholder="Search by book title"
+          aria-label="Search by book title"
+          className="flex-1 rounded-md border border-[#cfcab0] bg-white px-4 py-3 text-[15px] text-[#3b3a2f] outline-none focus:border-[#2f7fc1] focus:ring-2 focus:ring-[#2f7fc1]/20"
+        />
+        <select
+          name="category"
+          defaultValue={category}
+          aria-label="Filter by category"
+          className="rounded-md border border-[#cfcab0] bg-white px-4 py-3 text-[15px] text-[#3b3a2f] outline-none focus:border-[#2f7fc1]"
+        >
+          <option value="">All categories</option>
+          {CATEGORIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+        <button
+          type="submit"
+          className="rounded-md bg-[#0b6bcb] px-7 py-3 text-[15px] font-semibold text-white transition hover:bg-[#0958a8]"
+        >
+          Search
+        </button>
+      </form>
+
+      {failed ? (
+        <p className="rounded-lg border border-dashed border-[#cfcab0] bg-white py-12 text-center text-[#7a786a]">
+          We could not load the books right now. Please try again in a moment.
+        </p>
+      ) : books.length === 0 ? (
+        <div className="rounded-lg border border-dashed border-[#cfcab0] bg-white py-12 text-center text-[#7a786a]">
+          <p>{filtering ? "No books match your search." : "No books yet. Be the first to add one!"}</p>
+          {filtering && (
+            <Link href="/books" className="mt-3 inline-block font-semibold text-[#0b6bcb] hover:underline">
+              Show all books
+            </Link>
+          )}
+        </div>
+      ) : (
+        <>
+          <p className="mb-6 text-sm text-[#7a786a]">
+            Showing {books.length} {books.length === 1 ? "book" : "books"}
+          </p>
+          {/* 3 cards per row on desktop */}
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {books.map((book) => (
+              <BookCard key={book._id} book={book} />
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+export default function BooksPage({ searchParams }: { searchParams: SearchParams }) {
   return (
     <section className="bg-[#f6f3e6] py-16">
       <div className="mx-auto max-w-6xl px-4">
@@ -45,63 +111,9 @@ export default async function BooksPage({
           <div className="mx-auto mt-4 h-1 w-16 rounded bg-[#2f7fc1]" />
         </div>
 
-        {/* Search + category filter. A plain GET form, so it works without JavaScript */}
-        <form action="/books" method="get" className="mx-auto mb-10 flex max-w-3xl flex-col gap-3 sm:flex-row">
-          <input
-            type="search"
-            name="search"
-            defaultValue={search}
-            placeholder="Search by book title"
-            aria-label="Search by book title"
-            className="flex-1 rounded-md border border-[#cfcab0] bg-white px-4 py-3 text-[15px] text-[#3b3a2f] outline-none focus:border-[#2f7fc1] focus:ring-2 focus:ring-[#2f7fc1]/20"
-          />
-          <select
-            name="category"
-            defaultValue={category}
-            aria-label="Filter by category"
-            className="rounded-md border border-[#cfcab0] bg-white px-4 py-3 text-[15px] text-[#3b3a2f] outline-none focus:border-[#2f7fc1]"
-          >
-            <option value="">All categories</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            className="rounded-md bg-[#0b6bcb] px-7 py-3 text-[15px] font-semibold text-white transition hover:bg-[#0958a8]"
-          >
-            Search
-          </button>
-        </form>
-
-        {failed ? (
-          <p className="rounded-lg border border-dashed border-[#cfcab0] bg-white py-12 text-center text-[#7a786a]">
-            We could not load the books right now. Please try again in a moment.
-          </p>
-        ) : books.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-[#cfcab0] bg-white py-12 text-center text-[#7a786a]">
-            <p>{filtering ? "No books match your search." : "No books yet. Be the first to add one!"}</p>
-            {filtering && (
-              <Link href="/books" className="mt-3 inline-block font-semibold text-[#0b6bcb] hover:underline">
-                Show all books
-              </Link>
-            )}
-          </div>
-        ) : (
-          <>
-            <p className="mb-6 text-sm text-[#7a786a]">
-              Showing {books.length} {books.length === 1 ? "book" : "books"}
-            </p>
-            {/* 3 cards per row on desktop */}
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {books.map((book) => (
-                <BookCard key={book._id} book={book} />
-              ))}
-            </div>
-          </>
-        )}
+        <Suspense fallback={<Spinner label="Loading books..." />}>
+          <BooksContent searchParams={searchParams} />
+        </Suspense>
       </div>
     </section>
   );

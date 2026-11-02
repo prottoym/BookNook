@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import BorrowButton from "@/components/BorrowButton";
+import Spinner from "@/components/Spinner";
 import type { Book } from "@/lib/books";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -26,7 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function BookDetailsPage({ params }: Props) {
+// The book itself. It reads the URL and the server, so it sits inside <Suspense>
+// and a spinner shows while it loads.
+async function BookDetails({ params }: Props) {
   const { id } = await params;
 
   let book: Book | null = null;
@@ -118,5 +122,19 @@ export default async function BookDetailsPage({ params }: Props) {
         </div>
       </div>
     </section>
+  );
+}
+
+export default function BookDetailsPage({ params }: Props) {
+  return (
+    <Suspense
+      fallback={
+        <div className="bg-[#f6f3e6]">
+          <Spinner label="Loading book..." />
+        </div>
+      }
+    >
+      <BookDetails params={params} />
+    </Suspense>
   );
 }

@@ -7,8 +7,12 @@ import { MongoClient } from "mongodb";
 // One MongoDB connection, reused while the dev server hot reloads
 const globalForMongo = globalThis as unknown as { _authMongoClient?: MongoClient };
 
-const client =
-  globalForMongo._authMongoClient ?? new MongoClient(process.env.MONGODB_URL as string);
+const mongoUrl = process.env.MONGODB_URL ?? process.env.MONGODB_URI;
+if (!mongoUrl) {
+  throw new Error("MONGODB_URL is missing. Add it to .env.local and restart the dev server.");
+}
+
+const client = globalForMongo._authMongoClient ?? new MongoClient(mongoUrl);
 
 if (process.env.NODE_ENV !== "production") {
   globalForMongo._authMongoClient = client;
@@ -25,7 +29,6 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6, // BetterAuth default is 8, our rule is 6
-    autoSignIn: false, // after register the user goes to the Login page
   },
 
   socialProviders: {
