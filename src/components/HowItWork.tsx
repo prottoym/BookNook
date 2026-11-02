@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 
 const steps = [
   {
@@ -28,7 +29,7 @@ export default function HowItWork() {
     <section className="bg-[#e0dcc8] py-16">
       <div className="mx-auto max-w-6xl px-4">
         {/* Heading (same style as the other sections) */}
-        <div className="mb-14 text-center">
+        <Reveal className="mb-14 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2f7fc1]">
             Simple as 1, 2, 3, 4
           </span>
@@ -36,7 +37,7 @@ export default function HowItWork() {
             How Borrowing Works
           </h2>
           <div className="mx-auto mt-4 h-1 w-16 rounded bg-[#2f7fc1]" />
-        </div>
+        </Reveal>
 
         <ol className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* dashed line that links the steps on desktop */}
@@ -46,8 +47,10 @@ export default function HowItWork() {
           />
 
           {steps.map((step, i) => (
-            <li
+            <Reveal
+              as="li"
               key={step.title}
+              delay={i * 0.1}
               className="relative flex h-full flex-col items-center rounded-xl border border-[#cfcab0] bg-[#f6f3e6] px-6 pb-8 pt-10 text-center shadow-sm"
             >
               <span className="absolute -top-6 flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#e0dcc8] bg-[#2f7fc1] font-serif text-xl font-bold text-white shadow">
@@ -58,7 +61,7 @@ export default function HowItWork() {
               </span>
               <h3 className="mt-4 font-serif text-xl font-bold text-[#3b3a2f]">{step.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-[#6b6a58]">{step.text}</p>
-            </li>
+            </Reveal>
           ))}
         </ol>
 

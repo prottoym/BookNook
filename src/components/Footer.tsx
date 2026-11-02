@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import CurrentYear from "@/components/CurrentYear";
 
@@ -34,38 +35,19 @@ const quickLinks = [
 
 const socials = [
   {
-    label: "Facebook",
-    href: "https://facebook.com",
-    icon: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />,
-  },
-  {
-    label: "X",
-    href: "https://x.com",
+    label: "GitHub",
+    href: "https://github.com/prottoym",
     filled: true,
     icon: (
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    ),
-  },
-  {
-    label: "Instagram",
-    href: "https://instagram.com",
-    icon: (
-      <>
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-      </>
+      <path d="M12 .297a12 12 0 0 0-3.793 23.388c.6.111.82-.261.82-.577v-2.234c-3.338.726-4.043-1.416-4.043-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.084 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.775.418-1.305.762-1.605-2.665-.303-5.467-1.332-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.323 3.301 1.23a11.5 11.5 0 0 1 6.01 0c2.291-1.553 3.297-1.23 3.297-1.23.655 1.652.243 2.873.12 3.176.77.84 1.234 1.91 1.234 3.221 0 4.61-2.807 5.625-5.479 5.921.43.372.814 1.102.814 2.222v3.293c0 .319.216.694.825.576A12 12 0 0 0 12 .297z" />
     ),
   },
   {
     label: "LinkedIn",
-    href: "https://linkedin.com",
+    href: "https://linkedin.com/in/prottoy-modak",
+    filled: true,
     icon: (
-      <>
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-        <rect x="2" y="9" width="4" height="12" />
-        <circle cx="4" cy="4" r="2" />
-      </>
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.049c.476-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM6.814 20.452H3.861V9h2.953v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
     ),
   },
 ];
@@ -80,7 +62,11 @@ export default function Footer() {
             <span
               key={i}
               className="flex-1 rounded-t-sm"
-              style={{ height: s.h, backgroundColor: s.c, minWidth: 10 }}
+              style={{
+                height: s.h,
+                backgroundColor: s.c,
+                minWidth: 10,
+              }}
             />
           ))}
         </div>
@@ -98,34 +84,11 @@ export default function Footer() {
               Book<span className="font-bold text-[#6fb1e8]">Nook</span>
             </span>
           </Link>
+
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#cfcab0]">
-            A cozy corner to share your shelf, borrow great reads and meet fellow book lovers.
+            A cozy corner to share your shelf, borrow great reads and meet
+            fellow book lovers.
           </p>
-          <div className="mt-5 flex gap-3">
-            {socials.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={s.label}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#6b6a58] text-[#e8e4d0] transition hover:border-[#2f7fc1] hover:bg-[#2f7fc1] hover:text-white"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill={s.filled ? "currentColor" : "none"}
-                  stroke={s.filled ? "none" : "currentColor"}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  {s.icon}
-                </svg>
-              </a>
-            ))}
-          </div>
         </div>
 
         {/* Quick links */}
@@ -148,22 +111,47 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <h3 className="font-serif text-lg text-white">Contact</h3>
+
           <ul className="mt-4 space-y-3 text-sm text-[#cfcab0]">
-            <li>📍 House 12, Road 5, Dhanmondi, Dhaka</li>
             <li>
               ✉️{" "}
-              <a href="mailto:hello@booknook.com" className="hover:text-white">
-                hello@booknook.com
+              <a
+                href="mailto:prottoymodakprottoy@booknook.com"
+                className="hover:text-white"
+              >
+                prottoymodakprottoy@booknook.com
               </a>
             </li>
-            <li>
-              📞{" "}
-              <a href="tel:+8801700000000" className="hover:text-white">
-                +880 1700-000000
-              </a>
-            </li>
-            <li>🕘 Sat – Thu, 9:00 AM – 8:00 PM</li>
           </ul>
+
+          {/* Social Links */}
+          <div className="mt-5 flex gap-3">
+            {socials.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                title={s.label}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#6b6a58] text-[#e8e4d0] transition hover:border-[#2f7fc1] hover:bg-[#2f7fc1] hover:text-white"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill={s.filled ? "currentColor" : "none"}
+                  stroke={s.filled ? "none" : "currentColor"}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  {s.icon}
+                </svg>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 
 const categories = [
   {
@@ -38,18 +39,18 @@ export default function TopCategories() {
     <section className="bg-[#f6f3e6] py-16">
       <div className="mx-auto max-w-6xl px-4">
         {/* Heading (same style as the other sections) */}
-        <div className="mb-12 text-center">
+        <Reveal className="mb-12 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2f7fc1]">
             Find your shelf
           </span>
           <h2 className="mt-2 font-serif text-3xl font-bold text-[#3b3a2f] sm:text-4xl">Top Categories</h2>
           <div className="mx-auto mt-4 h-1 w-16 rounded bg-[#2f7fc1]" />
-        </div>
+        </Reveal>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-          {categories.map((c) => (
+          {categories.map((c, i) => (
+            <Reveal key={c.name} className="h-full" delay={i * 0.08}>
             <Link
-              key={c.name}
               href={`/books?category=${encodeURIComponent(c.name)}`}
               className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#e3dfca] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
             >
@@ -75,6 +76,7 @@ export default function TopCategories() {
                 </span>
               </div>
             </Link>
+            </Reveal>
           ))}
         </div>
       </div>

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
+import { connection } from "next/server";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -33,13 +35,15 @@ async function getLatestBooks(): Promise<Book[]> {
 }
 
 export default async function NewArrivals() {
+  // The latest books change all the time, so load them on every visit
+  await connection();
   const books = await getLatestBooks();
 
   return (
     <section className="bg-[#f6f3e6] py-16">
       <div className="mx-auto max-w-6xl px-4">
         {/* Heading */}
-        <div className="mb-12 text-center">
+        <Reveal className="mb-12 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2f7fc1]">
             Fresh on the shelf
           </span>
@@ -47,7 +51,7 @@ export default async function NewArrivals() {
             New Arrivals
           </h2>
           <div className="mx-auto mt-4 h-1 w-16 rounded bg-[#2f7fc1]" />
-        </div>
+        </Reveal>
 
         {books.length === 0 ? (
           <p className="rounded-lg border border-dashed border-[#cfcab0] bg-white py-12 text-center text-[#7a786a]">
@@ -56,7 +60,8 @@ export default async function NewArrivals() {
         ) : (
           <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {books.map((book, i) => (
-              <article key={book._id} className="group">
+              <Reveal key={book._id} delay={(i % 3) * 0.1}>
+              <article className="group">
                 {/* Cover sitting on a shelf */}
                 <div className="relative">
                   <div className="flex h-72 items-end justify-center rounded-t-lg bg-[#e0dcc8] px-6 pt-6">
@@ -102,6 +107,7 @@ export default async function NewArrivals() {
                   </Link>
                 </div>
               </article>
+              </Reveal>
             ))}
           </div>
         )}
