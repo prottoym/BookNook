@@ -1,10 +1,10 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const publicLinks = [
   { href: "/", label: "Home" },
@@ -95,6 +95,8 @@ export default function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
+            <ThemeToggle />
+
             {isPending ? (
               <div className="h-10 w-10 animate-pulse rounded-full bg-[#d3cfb8]" />
             ) : user ? (
