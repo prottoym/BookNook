@@ -7,7 +7,7 @@ import BorrowButton from "@/components/BorrowButton";
 import Spinner from "@/components/Spinner";
 import type { Book } from "@/lib/books";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
 
 type Props = { params: Promise<{ id: string }> };
 
