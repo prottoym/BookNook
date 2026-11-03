@@ -1,6 +1,6 @@
 import { authClient } from "@/lib/auth-client";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
 
 /**
  * Calls the Express server and adds the logged in user's JWT.
