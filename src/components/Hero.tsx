@@ -9,6 +9,9 @@ import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+// A real book from the database (only what the banner needs)
+export type HeroBook = { _id: string; title: string; image: string };
+
 type Book = { color: string; label: string; w: number };
 
 type Slide = {
@@ -76,6 +79,44 @@ const slides: Slide[] = [
   },
 ];
 
+// Three real covers fanned out on a shelf
+function CoverFan({ books }: { books: HeroBook[] }) {
+  const [left, middle, right] = books;
+  const spots = [
+    { book: left, className: "left-1.5 z-10 -rotate-[7deg]" },
+    { book: right, className: "right-1.5 z-10 rotate-[7deg]" },
+    { book: middle, className: "left-[80px] z-20" },
+  ];
+
+  return (
+    <div className="relative mx-auto h-[360px] w-[330px]">
+      {/* soft circle */}
+      <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/10" />
+
+      {spots.map(({ book, className }) => (
+        <Link
+          key={book._id}
+          href={`/books/${book._id}`}
+          title={book.title}
+          className={`absolute top-[30px] h-[250px] w-[170px] origin-bottom overflow-hidden rounded-sm bg-[#e0dcc8] shadow-[6px_10px_18px_rgba(0,0,0,0.45)] transition duration-300 hover:-translate-y-2 ${className}`}
+        >
+          {book.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={book.image} alt={book.title} className="h-full w-full object-cover" />
+          ) : (
+            <span className="flex h-full items-center justify-center bg-[#3b3a2f] p-4 text-center font-serif text-lg text-[#e8e4d0]">
+              {book.title}
+            </span>
+          )}
+        </Link>
+      ))}
+
+      {/* the shelf they stand on */}
+      <div className="absolute left-1/2 top-[280px] z-30 h-3 w-[310px] -translate-x-1/2 rounded-sm bg-[#8a6a43] shadow-md" />
+    </div>
+  );
+}
+
 function BookArt({ slide }: { slide: Slide }) {
   return (
     <div className="relative mx-auto h-[360px] w-[330px]">
@@ -128,7 +169,13 @@ function BookArt({ slide }: { slide: Slide }) {
   );
 }
 
-export default function Hero() {
+export default function Hero({ books = [] }: { books?: HeroBook[] }) {
+  // Each slide shows 3 different books. Without 3 books we keep the drawn book stack.
+  const coversFor = (slideIndex: number) =>
+    books.length >= 3
+      ? [0, 1, 2].map((k) => books[(slideIndex * 3 + k) % books.length])
+      : null;
+
   return (
     <section className="relative">
       <Swiper
@@ -191,7 +238,7 @@ export default function Hero() {
                 </div>
 
                 <div className="hidden md:block">
-                  <BookArt slide={s} />
+                  {coversFor(i) ? <CoverFan books={coversFor(i)!} /> : <BookArt slide={s} />}
                 </div>
               </div>
             </div>
