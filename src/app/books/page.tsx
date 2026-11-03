@@ -8,7 +8,7 @@ import { CATEGORIES, type Book } from "@/lib/books";
 
 export const metadata: Metadata = { title: "All Books" };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
 
 type SearchParams = Promise<{ search?: string; category?: string }>;
 
