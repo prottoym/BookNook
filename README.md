@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BookNook
 
-## Getting Started
+**BookNook is a small online library. Add a book, borrow a book, return a book.**
 
-First, run the development server:
+**Live site:** https://book-nook-5bc5.vercel.app
+**Server API:** https://booknook-server-indol.vercel.app
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+BookNook lets readers share the books they own, browse everything on the shelf, borrow a book for a few days and return it when they are done. This repository is the **client** (Next.js). The Express + MongoDB server lives in its own repository.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Add, browse and manage books.** Add a book with a cover image (uploaded to imgbb), browse every book in a 3-per-row grid, and edit or delete the books you added from **My Books** (with a confirm modal, no browser alerts).
+- **Borrow and return in one click.** Open a book, confirm the borrow in a modal and track it in the **My Borrows** table. Press **Return Book** and the copy goes back on the shelf.
+- **Smart copy counting.** Every book has a Total Copies field. Borrowing takes one copy, returning gives it back, and when no copy is left the button turns into **Not Available**.
+- **No double borrowing.** The same reader cannot borrow the same book twice at the same time. A toast explains why.
+- **Secure login.** Email and password or Google sign-in with BetterAuth and the MongoDB adapter. Passwords need an uppercase letter, a lowercase letter and at least 6 characters. Private pages send logged-out visitors to Login and bring them back afterwards.
+- **Protected API.** Every private server route checks a JWT issued by BetterAuth, and only the owner of a book can edit or delete it.
+- **Polished experience.** Swiper.js banner showing the newest books, New Arrivals section, search and category filter, loading spinners, a custom 404 page, per-page titles, toasts for every success and error, and a fully responsive layout.
+- **Dark / light theme and animation.** A theme button in the navbar remembers your choice, and sections fade in with Framer Motion.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Pages
 
-## Learn More
+| Route | Access | What it does |
+| --- | --- | --- |
+| `/` | Public | Banner slider, New Arrivals, How Borrowing Works, Top Categories |
+| `/books` | Public | All books with search and category filter |
+| `/books/:id` | Private | Book details and the Borrow modal |
+| `/add-book` | Private | Add a new book |
+| `/my-books` | Private | Edit and delete your own books |
+| `/my-borrows` | Private | Books you borrowed, with Return Book |
+| `/profile` | Private | Your account details |
+| `/login`, `/register` | Public | Email and Google authentication |
 
-To learn more about Next.js, take a look at the following resources:
+## Tech stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js (App Router) and TypeScript
+- Tailwind CSS
+- BetterAuth with the MongoDB adapter and the JWT plugin
+- Swiper.js, Framer Motion, react-hot-toast
+- imgbb for book images
+- Express and MongoDB on the server side
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Run it on your computer
 
-## Deploy on Vercel
+1. Install the packages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Create a `.env.local` file in the project root:
+
+   ```bash
+   NEXT_PUBLIC_API_URL=http://localhost:5000
+   NEXT_PUBLIC_IMGBB_KEY=your_imgbb_api_key
+   MONGODB_URL=your_mongodb_connection_string
+   BETTER_AUTH_SECRET=a_long_random_secret
+   BETTER_AUTH_URL=http://localhost:3000
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   ```
+
+   - `BETTER_AUTH_URL` must be a full URL, with `https://` on the live site and no slash at the end.
+   - Use the **same** `BETTER_AUTH_SECRET` everywhere that shares the same database.
+   - The Google keys are only needed for Google sign-in. The Google redirect URI is `<BETTER_AUTH_URL>/api/auth/callback/google`.
+
+3. Start the server from the server repository (`node index.js`), then start the client:
+
+   ```bash
+   npm run dev
+   ```
+
+   Open http://localhost:3000.
+
+## Deployment
+
+The client is deployed on **Vercel** and the server on its own Vercel project. Add the same environment variables in the Vercel project settings and redeploy after changing any of them. On the server, `AUTH_URL` must equal the client's `BETTER_AUTH_URL`, and `CLIENT_ORIGINS` must contain the client's URL.
