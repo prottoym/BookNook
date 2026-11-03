@@ -1,0 +1,29 @@
+import { connection } from "next/server";
+import Hero, { type HeroBook } from "@/components/Hero";
+
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
+
+// The 9 newest books from the Express server (3 for each slide)
+async function getLatestBooks(): Promise<HeroBook[]> {
+  try {
+    const res = await fetch(`${API_URL}/books?sort=newest&limit=9`, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+    const docs: Partial<HeroBook>[] = await res.json();
+
+    return docs.map((d) => ({
+      _id: String(d._id),
+      title: d.title ?? "Untitled",
+      image: d.image ?? "",
+    }));
+  } catch (error) {
+    if ((error as { digest?: string })?.digest === "HANGING_PROMISE_REJECTION") throw error;
+    console.error("Failed to load books for the banner:", error);
+    return [];
+  }
+}
+
+export default async function HeroWithBooks() {
+  await connection();
+  const books = await getLatestBooks();
+  return <Hero books={books} />;
+}
